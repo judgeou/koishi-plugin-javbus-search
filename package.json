@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-javbus-search",
   "description": "javbus 搜索服务",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "contributors": [
     "judgeou@vip.qq.com"
   ],
