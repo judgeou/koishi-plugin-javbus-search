@@ -5,6 +5,7 @@ import { SocksProxyAgent } from 'socks-proxy-agent'
 export const name = 'javbus-search'
 
 export interface Config {
+  api_endpoint: string,
   显示数量: number,
   磁链显示数量: number,
   是否显示显示磁链协议头: boolean,
@@ -13,6 +14,7 @@ export interface Config {
 }
 
 export const Config: Schema<Config> = Schema.object({
+  api_endpoint: Schema.string(),
   显示数量: Schema.number(),
   磁链显示数量: Schema.number(),
   是否显示显示磁链协议头: Schema.boolean(),
@@ -28,7 +30,7 @@ export function apply(ctx: Context, config: Config) {
       return ''
     }
     const keyword_param = encodeURIComponent(keyword)
-    const result = await getJSONHttp(`https://javbus.onrender.com/api/v1/movies/search?keyword=${keyword_param}&page=1&magnet=exist`, true)
+    const result = await getJSONHttp(`${config.api_endpoint}/api/v1/movies/search?keyword=${keyword_param}&page=1&magnet=exist`, true)
 
     if (result && result.movies && result.movies.length) {
       const movies = result.movies.slice(0, config.显示数量 || 3)
@@ -46,7 +48,7 @@ export function apply(ctx: Context, config: Config) {
     if (!id) {
       return ''
     }
-    const detail = await getJSONHttp(`https://javbus.onrender.com/api/v1/movies/${encodeURIComponent(id)}`, true)
+    const detail = await getJSONHttp(`${config.api_endpoint}/api/v1/movies/${encodeURIComponent(id)}`, true)
     const { magnets, img } = detail
     const magnets_text = magnets.slice(0, config.磁链显示数量 || 3)
       .map(item => `${item.size} ${config.是否显示显示磁链协议头 ? item.link : item.id}`).join('\n')
